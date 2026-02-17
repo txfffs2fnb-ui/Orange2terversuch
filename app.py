@@ -2,14 +2,12 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from config import Config
 from backtest_engine import run_backtest
 from strategy_sample import SmaCross
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
@@ -58,7 +56,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for("backtest"))
-        flash("Ung\u00fcltige Login-Daten.")
+        flash("Ungültige Login-Daten.")
     return render_template("login.html")
 
 @app.route("/logout")
@@ -74,4 +72,12 @@ def backtest():
     if request.method == "POST":
         symbol = request.form.get("symbol", "DTE.DE")
         start = request.form.get("start", "2022-01-01")
-                end = request.form.get("end", "2025-12-31")
+        end = request.form.get("end", "2025-12-31")
+        # Hier weiter mit run_backtest(symbol, start, end, strategy=SmaCross)
+        # result = run_backtest(...)  # Ergänze bei Bedarf
+    return render_template("backtest.html", result=result)
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
