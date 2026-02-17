@@ -73,8 +73,7 @@ def backtest():
         symbol = request.form.get("symbol", "DTE.DE")
         start = request.form.get("start", "2022-01-01")
         end = request.form.get("end", "2025-12-31")
-        # Hier weiter mit run_backtest(symbol, start, end, strategy=SmaCross)
-        # result = run_backtest(...)  # Ergänze bei Bedarf
+        result = run_backtest(symbol, start, end, strategy=SmaCross)
     return render_template("backtest.html", result=result)
 
 if __name__ == "__main__":
