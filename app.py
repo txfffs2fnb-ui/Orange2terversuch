@@ -72,24 +72,6 @@ def logout():
 def backtest():
     result = None
     if request.method == "POST":
-        symbol = request.form.get("symbol", "AAPL")
-        start = request.form.get("start", "2020-01-01")
-        end = request.form.get("end", "2021-01-01")
-        initial_cash = float(request.form.get("cash", 10000))
-
-        bt_result = run_backtest(
-            strategy_cls=SmaCross,
-            symbol=symbol,
-            start=start,
-            end=end,
-            cash=initial_cash
-        )
-
-        result = bt_result
-
-    return render_template("backtest.html", result=result)
-
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+        symbol = request.form.get("symbol", "DTE.DE")
+        start = request.form.get("start", "2022-01-01")
+                end = request.form.get("end", "2025-12-31")
