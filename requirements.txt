@@ -1,0 +1,10 @@
+flask
+flask-login
+flask-wtf
+flask-sqlalchemy
+wtforms
+backtrader
+pandas
+yfinance
+gunicorn
+werkzeug
