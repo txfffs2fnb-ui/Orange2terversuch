@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orange Trading Bot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Orange Trading Bot</h1>
+  <nav>
+    {% if current_user.is_authenticated %}
+      Eingeloggt als <strong>{{ current_user.username }}</strong> |
+      <a href="{{ url_for('backtest') }}">Backtest</a> |
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a> |
+      <a href="{{ url_for('register') }}">Registrieren</a>
+    {% endif %}
+  </nav>
+</header>
+<hr>
+<main>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="messages">
+      {% for m in messages %}
+        <li>{{ m }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
