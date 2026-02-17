@@ -25,6 +25,10 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route('/')
+def home():
+    return 'Hallo Orange2!'
+
 @app.route("/")
 def index():
     return render_template("index.html")
