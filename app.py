@@ -60,15 +60,6 @@ def login():
             return redirect(url_for("backtest"))
         flash("Ungültige Login-Daten.")
     return render_template("login.html")
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    # Code aus Standard-Flask-Login
-    return render_template('register.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    return render_template('login.html')
-
 @app.route("/logout")
 @login_required
 def logout():
