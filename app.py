@@ -12,26 +12,28 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.route('/')
-def home():
-    return 'Hallo Orange2!'
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -49,6 +51,7 @@ def register():
         return redirect(url_for("login"))
     return render_template("register.html")
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -58,13 +61,16 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for("backtest"))
-        flash("Ungültige Login-Daten.")
+        flash("Ungueltige Login-Daten.")
     return render_template("login.html")
+
+
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("login"))
+
 
 @app.route("/backtest", methods=["GET", "POST"])
 @login_required
@@ -76,6 +82,7 @@ def backtest():
         end = request.form.get("end", "2025-12-31")
         result = run_backtest(symbol, start, end, strategy=SmaCross)
     return render_template("backtest.html", result=result)
+
 
 if __name__ == "__main__":
     with app.app_context():
