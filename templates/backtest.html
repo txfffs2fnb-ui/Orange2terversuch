@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Backtest</h2>
+<form method="POST">
+    <label for="symbol">Aktiensymbol:</label><br>
+    <input type="text" id="symbol" name="symbol" value="DTE.DE" required><br><br>
+    <label for="start">Startdatum:</label><br>
+    <input type="date" id="start" name="start" value="2022-01-01" required><br><br>
+    <label for="end">Enddatum:</label><br>
+    <input type="date" id="end" name="end" value="2025-12-31" required><br><br>
+    <button type="submit">Backtest starten</button>
+</form>
+
+{% if result %}
+<h3>Ergebnis</h3>
+<pre>{{ result }}</pre>
+{% endif %}
+{% endblock %}
