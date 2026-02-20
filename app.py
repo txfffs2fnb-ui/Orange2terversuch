@@ -11,6 +11,8 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+login_manager.login_message = "Bitte einloggen, um diese Seite aufzurufen."
+login_manager.login_message_category = "info"
 
 
 class User(UserMixin, db.Model):
@@ -30,9 +32,17 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash("Bitte einloggen, um diese Seite aufzurufen.", "warning")
+    return redirect(url_for("login"))
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return redirect(url_for("backtest"))
+    return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -54,13 +64,16 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("backtest"))
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
-            return redirect(url_for("backtest"))
+            next_page = request.args.get("next")
+            return redirect(next_page or url_for("backtest"))
         flash("Ungueltige Login-Daten.")
     return render_template("login.html")
 
