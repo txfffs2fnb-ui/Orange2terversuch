@@ -47,6 +47,8 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("backtest"))
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -89,12 +91,16 @@ def logout():
 @login_required
 def backtest():
     result = None
+    error = None
     if request.method == "POST":
         symbol = request.form.get("symbol", "DTE.DE")
         start = request.form.get("start", "2022-01-01")
         end = request.form.get("end", "2025-12-31")
-        result = run_backtest(symbol, start, end, strategy=SmaCross)
-    return render_template("backtest.html", result=result)
+        try:
+            result = run_backtest(symbol=symbol, start=start, end=end, strategy=SmaCross)
+        except Exception as e:
+            error = str(e)
+    return render_template("backtest.html", result=result, error=error)
 
 
 if __name__ == "__main__":
