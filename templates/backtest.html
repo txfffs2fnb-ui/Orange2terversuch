@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Backtest</h2>
+
 <form method="POST">
     <label for="symbol">Aktiensymbol:</label><br>
     <input type="text" id="symbol" name="symbol" value="DTE.DE" required><br><br>
@@ -11,8 +12,42 @@
     <button type="submit">Backtest starten</button>
 </form>
 
+{% if error %}
+<div style="color: red; margin-top: 20px;">
+    <strong>Fehler:</strong> {{ error }}
+</div>
+{% endif %}
+
 {% if result %}
-<h3>Ergebnis</h3>
-<pre>{{ result }}</pre>
+<div style="margin-top: 30px;">
+    <h3>Ergebnis</h3>
+    <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+        <tr style="background: #f2f2f2;">
+            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Kennzahl</th>
+            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Wert</th>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Startkapital</td>
+            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">{{ "%.2f"|format(result.start_value) }} &euro;</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Endkapital</td>
+            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">{{ "%.2f"|format(result.final_value) }} &euro;</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Gewinn / Verlust</td>
+            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;"
+                style="color: {% if result.final_value >= result.start_value %}green{% else %}red{% endif %}">
+                {{ "%.2f"|format(result.final_value - result.start_value) }} &euro;
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Rendite</td>
+            <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">
+                {{ "%.2f"|format(((result.final_value - result.start_value) / result.start_value) * 100) }} %
+            </td>
+        </tr>
+    </table>
+</div>
 {% endif %}
 {% endblock %}
